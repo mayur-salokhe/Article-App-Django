@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Article Detail{% endblock title %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <span class="fw-bold">{{ object.title }}</span> &middot;
+        <span class="text-muted">by {{ object.author }} | {{ object.date }}</span>
+    </div>
+    <div class="card-body">
+        {{ object.body }}
+    </div>
+    <div class="card-footer text-center text-muted">
+        <a href="{% url 'article_edit' object.pk %}">Edit</a> |
+        <a href="{% url 'article_delete' object.pk %}">Delete</a>
+    </div>
+    <div class="card-footer">
+        {% for comment in object.comments.all %}
+            <p>
+                {{ comment.date }} |
+                <span class="fw-bold">{{ comment.author }} &middot;</span>
+                {{ comment }}
+            </p>
+        {% endfor %}
+
+        <!-- Add Comment Form -->
+        <form method="post" action="{% url 'add_comment' object.pk %}">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button class="btn btn-outline-success" type="submit">Add Comment</button>
+        </form>
+    </div>
+</div>
+<br />
+{% endblock content %}
